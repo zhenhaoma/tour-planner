@@ -58,7 +58,7 @@ function initialize() {
 	//------------------------------------------------------------------------------------------------------------------------
 
 	//POPUPWINDOW: Date time picker init
-	jQuery('#datetimepicker').datetimepicker();
+	$('#datetimepicker').datetimepicker();
 
 
 
@@ -117,58 +117,58 @@ function geocodeAddress(location, assign) {
 
 function addAttraction()
 {
-var location = {name:currentLocationName, lat:currentLocationLat, lng:currentLocationLng};
-addedAttractionsArray.push(location);
+	var location = {name:currentLocationName, lat:currentLocationLat, lng:currentLocationLng};
+	addedAttractionsArray.push(location);
 
 
-//Clears the attractions auto complete box 
-document.getElementById("attraction-location").value = '';
+	//Clears the attractions auto complete box 
+	document.getElementById("attraction-location").value = '';
 
-generateTable();
+	generateTable();
 }
 
 
 function generateTable()
 {
-var table = document.getElementById("myTable");
+	var table = document.getElementById("myTable");
 
-//DELETE ENTIRE TABLE - Very crude deletion method
-table.innerHTML = "";
+	//DELETE ENTIRE TABLE - Very crude deletion method
+	table.innerHTML = "";
 
-for (i = 0; i < addedAttractionsArray.length; i++) 
-{
-	var row = table.insertRow(-1);
+	for (i = 0; i < addedAttractionsArray.length; i++) 
+	{
+		var row = table.insertRow(-1);
 
-	var locationNameCell = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-	var cell3 = row.insertCell(2);
+		var locationNameCell = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
 
-	locationNameCell.innerHTML = addedAttractionsArray[i].name;
-	cell2.innerHTML = "[Time/ Distance this destination adds to the trip]";
-	cell3.innerHTML = "<input type='checkbox'>";
-}
+		locationNameCell.innerHTML = addedAttractionsArray[i].name;
+		cell2.innerHTML = "[Time/ Distance this destination adds to the trip]";
+		cell3.innerHTML = "<input type='checkbox'>";
+	}
 }
 
 
 //(!BUG!) WITHIN METHOD NOT ALOT SELECTED ATTRACTIONS ARE DELETED
 function deleteAttraction()
 {
-var table=document.getElementById("myTable");
-var rowCount=table.rows.length;
+	var table=document.getElementById("myTable");
+	var rowCount=table.rows.length;
 
-for(var i=0;i<rowCount;i++)
-{
-	var chkbox = document.getElementById("myTable").rows[i].cells[2].childNodes[0];
-
-
-	if(null!=chkbox&&true==chkbox.checked)
+	for(var i=0;i<rowCount;i++)
 	{
-		//Deletes an array entry - (Splice Method Supported by all browsers???)
-		addedAttractionsArray.splice(i, 1)
-	}
+		var chkbox = document.getElementById("myTable").rows[i].cells[2].childNodes[0];
 
-}
-generateTable();
+
+		if(null!=chkbox&&true==chkbox.checked)
+		{
+			//Deletes an array entry - (Splice Method Supported by all browsers???)
+			addedAttractionsArray.splice(i, 1)
+		}
+
+	}
+	generateTable();
 }	
 
 
