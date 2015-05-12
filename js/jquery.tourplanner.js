@@ -1,18 +1,19 @@
-//Variable decaration
+// Google Maps specific variable declaration
 var geocoder;
 var autocomplete;
 
-//Variables for 'autocomplete' on the start and end location text boxes
+// Variables for 'autocomplete' on the start and end location text boxes
 var startLocation;
 var destinationLocation;
 
-//Map variable
+// Map object storage variable
 var map;
 
+// Store the travel type
+var travelType = "driving";
 
-
-//FOR POPUP PAGE
-//Variables of the current location set by asynchronous method 
+/* FOR POPUP PAGE */
+// Variables of the current location set by asynchronous method 
 var currentLocationName;
 var currentLocationLat;
 var currentLocationLng;
@@ -178,27 +179,33 @@ function deleteAttraction()
 function calculateRoute(){
 	//alert("Start Location: " + startLocation + "\nEnd Location: " + destinationLocation);
 	
-	var e = document.getElementById("travel-mode");
-	var strUser = e.options[e.selectedIndex].text;
+	console.log("Is " + travelType);
 	
-	
-	if(strUser == "Driving")
+	if(travelType == "driving")
 	{
-		alert("!!!!!");
+		
 	}
-	else if(strUser == "Walking")
+	else if(strUser == "walking")
 	{
+		
 	}
-	else if(strUser == "Bicycling")
+	else if(strUser == "cycling")
 	{
+		
 	}
-	else if(strUser == "Transit")
+	else if(strUser == "transit")
 	{
+		
 	}
-
 }
 
-
+function setTravelType(originElement, newTravelType) {
+	travelType = newTravelType;
+	$("#travel-mode>.btn-group").each(function() {
+		$(this).children().first().attr("class", "btn btn-default");
+	});
+	$(originElement).attr("class", "btn btn-success");
+}
 
 
 

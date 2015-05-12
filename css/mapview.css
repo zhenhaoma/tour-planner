@@ -1,14 +1,21 @@
-#map-canvas {
-	height: 100%;
-	float: left;
-	width: 70%;
+.map-container{
+    position: relative;
+    width: 100%;
+    height: 400px;
+	margin-bottom: 30px;
+}
+.map-container .map-canvas{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #control-panel {
-	padding: 20px;
-	float: right;
-	width: 30%;
-	text-align: left;
+
 }
 
 #overlay {
@@ -18,6 +25,7 @@
 	position: fixed;
 	width: 100%;
 	height: 100%;
+	z-index: 5;
 }
 
 #popup {
@@ -28,6 +36,7 @@
 	height: 70%;
 	top: 15%;
 	left: 15%;
+	z-index: 6;
 }
 
 #close-popup {
