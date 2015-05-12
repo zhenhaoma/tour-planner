@@ -42,10 +42,6 @@
 	text-align:center;
 }
 
-.container-content {
-	padding-top: 80px;
-}
-
 /* Fixes draw order bug */
 .input-group .form-control {
 	z-index: initial;
