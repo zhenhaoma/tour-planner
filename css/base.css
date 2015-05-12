@@ -44,3 +44,16 @@ ul.social-buttons li a:focus,
 ul.social-buttons li a:active {
     background-color: #08CA74;
 }
+
+h2.section-heading {
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 42px;
+}
+
+h3.section-subheading {
+	margin-bottom: 75px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-style: italic;
+	font-size: 20px;
+}
