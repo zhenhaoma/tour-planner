@@ -1,23 +1,17 @@
-body {
-	font-family: "Roboto";
-}
-
-html, body, #map-canvas {
+#map-canvas {
 	height: 100%;
-	margin: 0;
-	padding: 0;
-}
-#map-canvas{
 	float: left;
 	width: 70%;
 }
-#control-panel{
+
+#control-panel {
 	padding: 20px;
 	float: right;
 	width: 30%;
 	text-align: left;
 }
-#overlay{
+
+#overlay {
 	display: none;
 	opacity: 0.5;
 	background-color: black;
@@ -25,7 +19,8 @@ html, body, #map-canvas {
 	width: 100%;
 	height: 100%;
 }
-#popup{
+
+#popup {
 	display: none;
 	background-color: white;
 	position: fixed;
@@ -34,8 +29,8 @@ html, body, #map-canvas {
 	top: 15%;
 	left: 15%;
 }
-#close-popup{
-	opacity: 0.5;
+
+#close-popup {
 	position: absolute;
 	right: 10px;
 	top: 10px;
@@ -46,15 +41,22 @@ html, body, #map-canvas {
 	color: #5A5B9F;
 	text-align:center;
 }
-#close-popup:hover{
-	opacity: 1;
+
+/* Fixes draw order bug */
+.input-group .form-control {
+	z-index: initial;
 }
-.inner-container{
-	margin: 20px;
+
+/* Screen width specific CSS */
+@media (max-width: 767px) {
+	
 }
-#travel-mode{
-	width:50%;
+@media (min-width: 768px) and (max-width: 991px) {
+	
 }
-.text-center{
-	clear:both;
+@media (min-width: 992px) and (max-width: 1199px) {
+	
+}
+@media (min-width: 1200px) {
+	
 }

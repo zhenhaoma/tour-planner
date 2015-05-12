@@ -44,47 +44,50 @@
 		<script src="js/jquery.tourplanner.js"></script>
 	</head>
 	<body onload="initialize()">
-		<div id="map-canvas"></div>
-		<div id="control-panel">
-			<form>
-				<input id="start-location" class="form-control" placeholder="Enter origin address" type="text" />
-				<br />
-				<input id="end-location" class="form-control" placeholder="Enter destination address" type="text" />
-				<br />
-				<div>
-					Select Travel Mode:
-					<select class="form-control pull-right" id="travel-mode">
-						<option>Driving</option>
-						<option>Walking</option>
-						<option>Bicycling</option>
-						<option>Transit</option>
-					</select>
-					
+		<div id="overlay">
+				
+		</div>
+		<div class="container">
+			<div id="map-canvas"></div>
+			<div id="control-panel">
+				<form>
+					<input id="start-location" class="form-control" placeholder="Enter origin address" type="text" />
 					<br />
+					<input id="end-location" class="form-control" placeholder="Enter destination address" type="text" />
 					<br />
-					Select Departure Time:
-					<div class="form-group">
-						<div class="input-group date" id="datetimepicker">
-							<input type="text" class="form-control" />
-							<span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
-							</span>
+					<div>
+						Select Travel Mode:
+						<select class="form-control pull-right" id="travel-mode">
+							<option>Driving</option>
+							<option>Walking</option>
+							<option>Bicycling</option>
+							<option>Transit</option>
+						</select>
+						
+						<br />
+						<br />
+						Select Departure Time:
+						<div class="form-group">
+							<div class="input-group date" id="datetimepicker">
+								<input type="text" class="form-control" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="text-center"> 
-					<br />
-					<br />
-					<button type="button" class="btn btn-default" id="select-attractions-button">Select Attractions</button>
-					<br />
-					<br />
-					<button type="submit" class="btn btn-primary" onclick="calculateRoute()">Submit</button>
-				</div>
-			</form>
+					<div class="text-center"> 
+						<br />
+						<br />
+						<button type="button" class="btn btn-default" id="select-attractions-button">Select Attractions</button>
+						<br />
+						<br />
+						<button type="submit" class="btn btn-primary" onclick="calculateRoute()">Submit</button>
+					</div>
+				</form>
+			</div>
 		</div>
-		<div id="overlay">
-			
-		</div>
+		
 		<div id="popup">
 			<div id="close-popup"><i class="fa fa-times"></i></div>
 			<div class="inner-container">
