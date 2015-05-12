@@ -1,3 +1,7 @@
+body {
+	font-family: "Roboto";
+}
+
 html, body, #map-canvas {
 	height: 100%;
 	margin: 0;
@@ -6,7 +10,6 @@ html, body, #map-canvas {
 #map-canvas{
 	float: left;
 	width: 70%;
-	height: 100%;
 }
 #control-panel{
 	padding: 20px;
