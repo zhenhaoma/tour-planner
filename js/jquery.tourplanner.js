@@ -40,6 +40,7 @@ function initialize() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+			map.setZoom(6);
 		}, function() {
 			console.log("Geolocation service failed");
 		});
