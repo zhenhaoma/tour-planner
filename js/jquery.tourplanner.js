@@ -59,13 +59,13 @@ function initialize() {
 	//------------------------------------------------------------------------------------------------------------------------
 
 	//POPUPWINDOW: Initialise date picker for departure time
-	if (!Modernizr.inputtypes.datetime || navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+	if (!Modernizr.inputtypes.datetimelocal || navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
 		$("#departure-time").datetimepicker();
 	} else {
 		// Remove the button and place the input field in the parent
 		// CSS breaks if the button is removed without reordering DOM
 		$("#departure-time>span").remove();
-		$("#departure-time>input").attr("type", "date");
+		$("#departure-time>input").attr("type", "datetime-local");
 		$("#departure-time>input").appendTo($("#departure-time").parent());
 	}
 
