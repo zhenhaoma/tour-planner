@@ -13,19 +13,24 @@ var map;
 var travelType = "driving";
 isLooping = false;
 
-/* FOR POPUP PAGE */
-// Variables of the current location set by asynchronous method 
-var currentLocationName;
-var currentLocationLat;
-var currentLocationLng;
-var addedAttractionsArray = new Array();
-
 // End of time (for cookie storage purposes)
 endOfTime = "expires=Fri, 31 Dec 9999 23:59:59 GMT;";
 immediate = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
 // Preset Locations
 var australia = new google.maps.LatLng(-24.994167,134.866944)
+
+// Transit, traffic, and bicycle layers
+var transitLayer;
+var trafficLayer;
+var bicycleLayer;
+
+/* FOR POPUP PAGE */
+// Variables of the current location set by asynchronous method 
+var currentLocationName;
+var currentLocationLat;
+var currentLocationLng;
+var addedAttractionsArray = new Array();
 
 
 function initialize() {
@@ -116,9 +121,9 @@ function initialize() {
 		geocodeAddress(document.getElementById('attraction-location').value, 3);
 	});
 	
-	
-	
-	
+	transitLayer = new google.maps.TransitLayer();
+	trafficLayer = new google.maps.TrafficLayer();
+	bicycleLayer = new google.maps.BicyclingLayer();
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
@@ -230,6 +235,22 @@ function setTravelType(originElement, newTravelType) {
 		$(this).children().first().attr("class", "btn btn-default");
 	});
 	$(originElement).attr("class", "btn btn-success");
+	
+	transitLayer.setMap(null);
+	bicycleLayer.setMap(null);
+	trafficLayer.setMap(null);
+	
+	switch (travelType) {
+		case "transit":
+			transitLayer.setMap(map);
+			break;
+		case "cycling":
+			bicycleLayer.setMap(map);
+			break;
+		case "driving":
+			trafficLayer.setMap(map);
+			break;
+	}
 }
 
 function setIsLoop(checkbox) {
