@@ -11,6 +11,7 @@ var map;
 
 // Store the travel type
 var travelType = "driving";
+isLooping = false;
 
 /* FOR POPUP PAGE */
 // Variables of the current location set by asynchronous method 
@@ -19,15 +20,32 @@ var currentLocationLat;
 var currentLocationLng;
 var addedAttractionsArray = new Array();
 
+// End of time (for cookie storage purposes)
+endOfTime = "expires=Fri, 31 Dec 9999 23:59:59 GMT;";
+immediate = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+// Preset Locations
+var australia = new google.maps.LatLng(-24.994167,134.866944)
 
 
 function initialize() {
 	//Map Specifications
 	var mapProp = {
-		center:new google.maps.LatLng(-24.994167,134.866944),
-		zoom:5,
-		mapTypeId:google.maps.MapTypeId.ROADMAP
+		center: australia,
+		zoom: 4,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
+	
+	// Detect browser location support
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+		}, function() {
+			console.log("Geolocation service failed");
+		});
+	} else {
+		console.log("Browser does not support Geolocation");
+	}
 		
 	//Add Map to Div
 	map=new google.maps.Map(document.getElementById("map-canvas"),mapProp);
@@ -60,7 +78,10 @@ function initialize() {
 
 	//POPUPWINDOW: Initialise date picker for departure time
 	if (!Modernizr.inputtypes['datetime-local']  || navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-		$("#departure-time").datetimepicker();
+		$("#departure-time").datetimepicker({
+			sideBySide: true,
+			format: "D MMM YYYY h:mm a"
+		});
 	} else {
 		// Remove the button and place the input field in the parent
 		// CSS breaks if the button is removed without reordering DOM
@@ -183,25 +204,21 @@ function deleteAttraction()
 
 
 
-function calculateRoute(){
+function calculateRoute() {
 	//alert("Start Location: " + startLocation + "\nEnd Location: " + destinationLocation);
 	
 	console.log("Is " + travelType);
 	
-	if(travelType == "driving")
-	{
+	if(travelType == "driving") {
 		
 	}
-	else if(strUser == "walking")
-	{
+	else if(strUser == "walking") {
 		
 	}
-	else if(strUser == "cycling")
-	{
+	else if(strUser == "cycling") {
 		
 	}
-	else if(strUser == "transit")
-	{
+	else if(strUser == "transit") {
 		
 	}
 }
@@ -214,9 +231,22 @@ function setTravelType(originElement, newTravelType) {
 	$(originElement).attr("class", "btn btn-success");
 }
 
+function setIsLoop(checkbox) {
+	isLooping = $(checkbox).is(":checked");
+	if (isLooping) {
+		$("#end-location").hide();
+	} else {
+		$("#end-location").show();
+	}
+}
 
+function saveTrip() {
+	
+}
 
-
+function loadTrip() {
+	
+}
 
 
 $(document).on('click touchend', '#select-attractions-button', function(){

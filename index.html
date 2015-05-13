@@ -103,25 +103,30 @@
 						<form>
 							<h3 class="page-header">Plan Tour</h3>
 							<div class="form-group">
-								<input id="start-location" class="form-control" placeholder="Enter origin address" type="text" />
+								<div class="input-group">
+									<input id="start-location" class="form-control" placeholder="Start Location" type="text" />
+									<span class="input-group-addon checkbox">
+										<label><input type="checkbox" style="margin-top: 2px;" onchange="setIsLoop(this)" /><span class="glyphicon glyphicon-repeat"></span></label>
+									</span>
+								</div>
 							</div>
 							<div class="form-group">
-								<input id="end-location" class="form-control" placeholder="Enter destination address" type="text" />
+								<input id="end-location" class="form-control" placeholder="Destination" type="text" />
 							</div>
 							<div class="form-group">
 								<label for="travel-mode">Travel Mode</label>
 								<div class="btn-group btn-group-justified" id="travel-mode" role="group">
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-success" onmousedown="setTravelType(this, 'driving')">Driving</button>
+										<button type="button" class="btn btn-success" onclick="setTravelType(this, 'driving')">Driving</button>
 									</div>
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-default" onmousedown="setTravelType(this, 'walking')">Walking</button>
+										<button type="button" class="btn btn-default" onclick="setTravelType(this, 'walking')">Walking</button>
 									</div>
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-default" onmousedown="setTravelType(this, 'cycling')">Bicycling</button>
+										<button type="button" class="btn btn-default" onclick="setTravelType(this, 'cycling')">Bicycling</button>
 									</div>
 									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-default" onmousedown="setTravelType(this, 'transit')">Transit</button>
+										<button type="button" class="btn btn-default" onclick="setTravelType(this, 'transit')">Transit</button>
 									</div>
 								</div>
 							</div>
