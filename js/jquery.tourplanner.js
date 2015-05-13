@@ -62,7 +62,7 @@ function initialize() {
 	if (!Modernizr.inputtypes.datetime) {
 		$("#departure-time").datetimepicker();
 	} else {
-		$("#departure-time").attr("type", "datetime");
+		$("#departure-time>input").attr("type", "datetime");
 	}
 
 
