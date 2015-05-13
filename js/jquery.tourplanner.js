@@ -59,10 +59,14 @@ function initialize() {
 	//------------------------------------------------------------------------------------------------------------------------
 
 	//POPUPWINDOW: Initialise date picker for departure time
-	if (!Modernizr.inputtypes.datetime) {
+	if (!Modernizr.inputtypes.datetime || !!window.chrome) {
 		$("#departure-time").datetimepicker();
 	} else {
-		$("#departure-time>input").attr("type", "datetime");
+		// Remove the button and place the input field in the parent
+		// CSS breaks if the button is removed without reordering DOM
+		$("#departure-time>span").remove();
+		$("#departure-time>input").attr("type", "date");
+		$("#departure-time>input").appendTo($("#departure-time").parent());
 	}
 
 
