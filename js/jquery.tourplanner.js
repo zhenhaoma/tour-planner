@@ -58,9 +58,12 @@ function initialize() {
 	//POPUPWINDOW 
 	//------------------------------------------------------------------------------------------------------------------------
 
-	//POPUPWINDOW: Date time picker init
-	$('#datetimepicker').datetimepicker();
-
+	//POPUPWINDOW: Initialise date picker for departure time
+	if (!Modernizr.inputtypes.datetime) {
+		$("#departure-time").datetimepicker();
+	} else {
+		$("#departure-time").attr("type", "datetime");
+	}
 
 
 	//POPUPWINDOW: Autocomplete search filtering conditions set to only establishments within australia
