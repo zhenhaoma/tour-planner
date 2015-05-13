@@ -10,7 +10,7 @@ var destinationLocation;
 var map;
 
 // Store the travel type
-var travelType = "driving";
+var travelType = "walking";
 isLooping = false;
 
 // End of time (for cookie storage purposes)
@@ -38,7 +38,64 @@ function initialize() {
 	var mapProp = {
 		center: australia,
 		zoom: 4,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		disableDefaultUI: true,
+		styles: [
+			{
+				stylers: [
+					{ hue: "#2B167B" },
+					{ saturation: 0 },
+				]
+			},{
+				featureType: "road",
+				elementType: "geometry",
+				stylers: [
+					{ lightness: 60 },
+					{ visibility: "simplified" }
+				]
+			},{
+				featureType: "road.highway",
+				elementType: "geometry",
+				stylers: [
+					{ hue: "#F05329" }
+				]
+			},{
+				featureType: "poi.attraction",
+				elementType: "geometry",
+				stylers: [
+					{ hue: "#F05329" },
+					{ saturation: 50 },
+					{ lightness: -10 }
+				]
+			},{
+				featureType: "poi.sports_complex",
+				elementType: "geometry",
+				stylers: [
+					{ hue: "#F05329" },
+					{ saturation: 50 },
+					{ lightness: -10 }
+				]
+			},{
+				featureType: "poi.park",
+				elementType: "geometry",
+				stylers: [
+					{ hue: "#08CA74" },
+					{ saturation: 50 }
+				]
+			},{
+				featureType: "poi",
+				elementType: "labels.text.stroke",
+				stylers: [
+					{ lightness: -100 }
+				]
+			},{
+				featureType: "poi",
+				elementType: "labels.text.fill",
+				stylers: [
+					{ lightness: 100 }
+				]
+			}
+		]
 	};
 	
 	// Detect browser location support
@@ -54,7 +111,7 @@ function initialize() {
 	}
 		
 	//Add Map to Div
-	map=new google.maps.Map(document.getElementById("map-canvas"),mapProp);
+	map = new google.maps.Map(document.getElementById("map-canvas"),mapProp);
 
 	//Initialise Geocoder object
 	geocoder = new google.maps.Geocoder();
@@ -262,6 +319,9 @@ function setIsLoop(checkbox) {
 	}
 }
 
+/** Save and load the trip at the beginning and end of each session, 
+	Save/load buttons are not user friendly
+**/
 function saveTrip() {
 	
 }
