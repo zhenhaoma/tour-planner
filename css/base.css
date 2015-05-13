@@ -62,6 +62,12 @@ h3.section-subheading {
 	font-size: 20px;
 }
 
+.date-input {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
 /* Screen width specific CSS */
 @media (max-width: 767px) {
 	
