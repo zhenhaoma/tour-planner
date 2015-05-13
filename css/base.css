@@ -75,6 +75,11 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
 	padding-right: 15px;
 }
 
+.scrolling-y {
+	overflow-y: scroll;
+	height: 100%;
+}
+
 /* Screen width specific CSS */
 @media (max-width: 767px) {
 	
