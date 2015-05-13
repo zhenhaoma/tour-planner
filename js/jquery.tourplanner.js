@@ -237,29 +237,17 @@ function generateTable()
 
 		locationNameCell.innerHTML = addedAttractionsArray[i].name;
 		cell2.innerHTML = "[Time/ Distance this destination adds to the trip]";
-		cell3.innerHTML = "<input type='checkbox'>";
+		cell3.innerHTML = "<button type='button' class='btn btn-default' onclick='deleteAttraction(this)'>Remove</button>";
 	}
 }
 
 
-//(!BUG!) WITHIN METHOD NOT ALOT SELECTED ATTRACTIONS ARE DELETED
-function deleteAttraction()
+// Fixed and shortened
+function deleteAttraction(button)
 {
-	var table=document.getElementById("myTable");
-	var rowCount=table.rows.length;
-
-	for(var i=0;i<rowCount;i++)
-	{
-		var chkbox = document.getElementById("myTable").rows[i].cells[2].childNodes[0];
-
-
-		if(null!=chkbox&&true==chkbox.checked)
-		{
-			//Deletes an array entry - (Splice Method Supported by all browsers???)
-			addedAttractionsArray.splice(i, 1)
-		}
-
-	}
+	var row = $(button).parent().parent();
+	addedAttractionsArray.splice(row.index(), 1);
+	
 	generateTable();
 }	
 

@@ -68,6 +68,13 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
 	line-height: 1.42857143;
 }
 
+.inner-container {
+	margin-right: auto;
+	margin-left: auto;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
 /* Screen width specific CSS */
 @media (max-width: 767px) {
 	

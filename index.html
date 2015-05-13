@@ -153,17 +153,21 @@
 			<div id="close-popup"><i class="fa fa-times"></i></div>
 			<div class="inner-container">
 				<div class="row">
-					<div class="col-xs-6">
-						<input type="text" class="form-control" id="attraction-location" placeholder="Attraction..." />
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search for Attractions" id="attraction-location" />
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" onclick="addAttraction()">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</span>
+						</div>
 					</div>
-					
-					<button type="button" onclick="addAttraction()">Add</button>
-					<button type="button" onclick="deleteAttraction()">Delete</button>
 			
 					<div id="added-locations">
 						<br />
 			
-						<table id="myTable">
+						<table class="table" id="myTable">
 							
 						</table>
 					</div>

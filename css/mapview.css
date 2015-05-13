@@ -32,6 +32,9 @@
 	top: 15%;
 	left: 15%;
 	z-index: 6;
+	
+	border-radius: 5px;
+	padding-top: 16px;
 }
 
 #close-popup {
