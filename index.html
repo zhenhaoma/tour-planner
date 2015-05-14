@@ -67,7 +67,7 @@
 	</head>
 	<body onload="initialize()">
 		<div id="overlay"></div>
-		<nav class="navbar navbar-inverse">
+		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -94,7 +94,7 @@
 		</nav>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-sm-6 col-md-7 col-lg-8">
+				<div class="col-sm-6 col-md-7 col-lg-8 col-map">
 					<div class="map-container">
 						<div id="map-canvas" class="map-canvas"></div>
 					</div>
@@ -106,7 +106,7 @@
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane fade in active" id="plantour">
 								<form>
-									<div class="page-header">
+									<div class="page-header hidden-xs">
 										<h3>Plan Tour <button type="submit" class="btn btn-default btn-xs" onclick="shareRoute()"><span class="glyphicon glyphicon-share"></span><span class="button-poptext"> Share</span></button></h3>
 									</div>
 									<div class="form-group">
@@ -123,7 +123,7 @@
 										<input id="end-location" name="end-location" class="form-control" placeholder="Destination" type="text" />
 									</div>
 									<div class="form-group">
-										<label for="travel-mode">Travel Mode</label>
+										<label for="travel-mode" class="hidden-xs">Travel Mode</label>
 										<div class="btn-group btn-group-justified" id="travel-mode" role="group">
 											<div class="btn-group" role="group">
 												<button type="button" class="btn btn-default" onclick="setTravelType(this, 'driving')" ontouchend="setTravelType(this, 'driving')">Driving</button>
@@ -141,7 +141,7 @@
 										<input type="hidden" id="travel-mode" name="travel-mode"></input>
 									</div>
 									<div class="form-group">
-										<label for="departure-time">Departure Time</label>
+										<label for="departure-time" class="hidden-xs">Departure Time</label>
 										<div class="input-group date" id="departure-time">
 											<span class="input-group-addon">
 												<span class="glyphicon glyphicon-calendar"></span>
@@ -155,7 +155,7 @@
 								</form>
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="planstops">
-								<div class="page-header">
+								<div class="page-header hidden-xs">
 									<h3>Tour Attractions</h3>
 								</div>
 								<div class="form-group">
@@ -180,7 +180,5 @@
 				</div>
 			</div>
 		</div>
-		
-		<br />
 	</body>
 </html>
