@@ -24,6 +24,8 @@ immediate = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
 // Preset Locations
 var australia = new google.maps.LatLng(-24.994167,134.866944)
+var fullZoom = 4;
+var reasonableZoom = 10;
 
 // Transit, traffic, and bicycle layers
 var transitLayer;
@@ -124,7 +126,7 @@ function initialize() {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			userLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 			map.setCenter(userLocation);
-			map.setZoom(7);
+			map.setZoom(reasonableZoom);
 		}, function() {
 			console.log("Geolocation service failed");
 		});
@@ -235,14 +237,7 @@ function geocodeAddress(location, assign) {
 				currentLocation = results[0].geometry.location;
 			}
 			
-			// TODO: Proper error handling and functionality
-			var mapBounds = new google.maps.LatLngBounds();
-			mapBounds.extend(startLocation);
-			mapBounds.extend(destinationLocation);
-			
-			if (!mapBounds.isEmpty()) {
-				map.fitBounds(mapBounds);
-			}
+			setMapViewport(startLocation, destinationLocation);
 			
 			calculateRoute();
 		} else {
@@ -251,7 +246,25 @@ function geocodeAddress(location, assign) {
 	});
 }
 
-
+/** Pass nulls for zooming on singular objects **/
+function setMapViewport(start, end) {
+	// TODO: Proper error handling and functionality
+	if (start || end) {
+		var mapBounds = new google.maps.LatLngBounds();
+		if (start) {
+			mapBounds.extend(start);
+		}
+		if (end) {
+			mapBounds.extend(end);
+		}
+		
+		map.fitBounds(mapBounds);
+		
+		if (!end) {
+			map.setZoom(reasonableZoom);
+		}
+	}
+}
 
 function addAttraction() {
 	var location = {name:currentLocationName, lat:currentLocation.lat(), lng:currentLocation.lng()};
@@ -307,13 +320,13 @@ function calculateRoute() {
 	if(travelType == "driving") {
 		
 	}
-	else if(strUser == "walking") {
+	else if(travelType == "walking") {
 		
 	}
-	else if(strUser == "cycling") {
+	else if(travelType == "cycling") {
 		
 	}
-	else if(strUser == "transit") {
+	else if(travelType == "transit") {
 		
 	}
 }
@@ -350,6 +363,11 @@ function setRoundTrip(button) {
 		$("#end-location").hide();
 		$(button).addClass("btn-success");
 		$(button).removeClass("btn-default");
+		
+		destinationLocation = null;
+		$("#end-location").val("");
+		
+		setMapViewport(startLocation, null);
 	} else {
 		isLooping = false;
 		$("#end-location").show();
