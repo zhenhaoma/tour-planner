@@ -368,3 +368,9 @@ function saveTrip() {
 function loadTrip() {
 	
 }
+
+function changeTab(tabName) {
+	var tabs = $("[aria-controls='" + tabName + "']");
+	console.log(tabs);
+}
+

@@ -80,7 +80,9 @@
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="#">Plan Tour</a></li>
+						<li role="presentation" class="active hidden-xs"><a href="#plantour" aria-controls="plantour" role="tab" data-toggle="tab">Plan Tour</a></li>
+						<li role="presentation" class="hidden-xs"><a href="#planstops" aria-controls="planstops" role="tab" data-toggle="tab">Visit Attractions</a></li>
+						<li class="active visible-xs"><a href="#">Plan Tour</a></li>
 						<li><a href="about.html">About</a></li>
 						<li><a href="help.html">Help</a></li>
 					</ul>
@@ -99,14 +101,10 @@
 				</div>
 				<div class="col-sm-6 col-md-5 col-lg-4">
 					<div role="tabpanel">
-						<ul class="nav nav-tabs nav-justified" role="tablist">
-							<li role="presentation" class="active"><a href="#plantour" aria-controls="plantour" role="tab" data-toggle="tab">Plan Tour</a></li>
-							<li role="presentation"><a href="#planstops" aria-controls="planstops" role="tab" data-toggle="tab">Visit Attractions</a></li>
-						</ul>
 
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div role="tabpanel" class="tab-pane active" id="plantour">
+							<div role="tabpanel" class="tab-pane fade in active" id="plantour">
 								<form>
 									<div class="page-header">
 										<h3>Plan Tour <button type="submit" class="btn btn-default btn-xs" onclick="shareRoute()"><span class="glyphicon glyphicon-share"></span><span class="button-poptext"> Share</span></button></h3>
@@ -151,9 +149,12 @@
 											<input type="text" class="form-control" placeholder="Enter a Date" name="departure-time" />
 										</div>
 									</div>
+									<div class="form-group text-center visible-xs">
+										<a class="btn btn-primary" href="#planstops" aria-controls="planstops" role="tab" data-toggle="tab">Select Attractions</a>
+									</div>
 								</form>
 							</div>
-							<div role="tabpanel" class="tab-pane" id="planstops">
+							<div role="tabpanel" class="tab-pane fade" id="planstops">
 								<div class="page-header">
 									<h3>Tour Attractions</h3>
 								</div>
@@ -168,11 +169,10 @@
 									</div>						
 								</div>
 								<div class="panel panel-default scrollable-table">
-									<table class="table table-striped" id="attraction-table">
-										<tr>
-											<th>Find attractions using the text box above</th>
-										</tr>
-									</table>
+									<table class="table table-striped" id="attraction-table"></table>
+								</div>
+								<div class="form-group text-center visible-xs">
+									<a class="btn btn-primary" href="#plantour" aria-controls="plantour" role="tab" data-toggle="tab">Back to Planning</a>
 								</div>
 							</div>
 						</div>
@@ -180,7 +180,6 @@
 				</div>
 			</div>
 		</div>
-		
 		
 		<br />
 	</body>
