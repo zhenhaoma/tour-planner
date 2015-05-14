@@ -213,6 +213,8 @@ function initialize() {
 		animation: google.maps.Animation.DROP,
 		draggable: true
 	});
+	
+	$('[data-toggle="tooltip"]').tooltip()
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
@@ -241,6 +243,8 @@ function geocodeAddress(location, assign) {
 			if (!mapBounds.isEmpty()) {
 				map.fitBounds(mapBounds);
 			}
+			
+			calculateRoute();
 		} else {
 			console.log('Geocode was not successful for the following reason: ' + status);
 		}
@@ -253,7 +257,7 @@ function addAttraction() {
 	var location = {name:currentLocationName, lat:currentLocation.lat(), lng:currentLocation.lng()};
 	addedAttractionsArray.push(location);
 
-	//Clears the attractions auto complete box 
+	// Clears the attractions auto complete box 
 	document.getElementById("attraction-location").value = '';
 	$("#add-attraction").attr("disabled", true);
 
@@ -264,20 +268,21 @@ function addAttraction() {
 function generateTable() {
 	var table = document.getElementById("attraction-table");
 
-	//DELETE ENTIRE TABLE - Very crude deletion method
+	// Delete contents of table
 	table.innerHTML = "";
-
-	for (i = 0; i < addedAttractionsArray.length; i++) 
-	{
+	
+	for (i = 0; i < addedAttractionsArray.length; i++) {
 		var row = table.insertRow(-1);
 
 		var locationNameCell = row.insertCell(0);
-		var cell2 = row.insertCell(1);
-		var cell3 = row.insertCell(2);
+		var travelInfoCell = row.insertCell(1);
+		var infoButtonCell = row.insertCell(2);
+		var closeButtonCell = row.insertCell(3);
 
 		locationNameCell.innerHTML = addedAttractionsArray[i].name;
-		cell2.innerHTML = "[Time/ Distance this destination adds to the trip]";
-		cell3.innerHTML = "<button type='button' class='btn btn-default' onclick='deleteAttraction(this)'>Remove</button>";
+		travelInfoCell.innerHTML = "00:00 0km";
+		infoButtonCell.innerHTML = "<span class='glyphicon glyphicon-info-sign'></span>"
+		closeButtonCell.innerHTML = "<button type='button' class='close' onclick='deleteAttraction(this)'>&times;</button>";
 	}
 }
 
@@ -295,6 +300,10 @@ function placeAttractions() {
 }
 
 function shareRoute() {
+	
+}
+
+function calculateRoute() {
 	if(travelType == "driving") {
 		
 	}
@@ -333,12 +342,19 @@ function setTravelType(originElement, newTravelType) {
 	}
 }
 
-function setRoundTrip(checkbox) {
-	isLooping = $(checkbox).is(":checked");
-	if (isLooping) {
+function setRoundTrip(button) {
+	// Returns a string rather than a boolean
+	// ALSO is inverted
+	if ($(button).attr("aria-pressed") != "true") {
+		isLooping = true;
 		$("#end-location").hide();
+		$(button).addClass("btn-success");
+		$(button).removeClass("btn-default");
 	} else {
+		isLooping = false;
 		$("#end-location").show();
+		$(button).addClass("btn-default");
+		$(button).removeClass("btn-success");
 	}
 }
 
@@ -367,13 +383,15 @@ function closeMenu() {
 // Fixes animation ordering bug
 var animateDebounce = false;
 
-$(document).on('click touchend', '#select-attractions-button', function() {
+function openMenu() {
 	animateDebounce = true;
 	$('#overlay').fadeIn(500, function() {
 		$('#popup').slideDown();
 		animateDebounce = false;
 	});
-});
+}
+
+$(document).on('click touchend', '#select-attractions-button', openMenu);
 
 $(document).on('click touchend', '#close-popup', closeMenu);
 $(document).on('click touchend', '#overlay', closeMenu);
