@@ -368,30 +368,3 @@ function saveTrip() {
 function loadTrip() {
 	
 }
-
-function closeMenu() {
-	if (!animateDebounce) {
-		$('#popup').slideUp(500, function() {
-			$('#overlay').fadeOut();
-		});
-		
-		placeAttractions();
-	}
-}
-
-// If animating, prevent window from closing
-// Fixes animation ordering bug
-var animateDebounce = false;
-
-function openMenu() {
-	animateDebounce = true;
-	$('#overlay').fadeIn(500, function() {
-		$('#popup').slideDown();
-		animateDebounce = false;
-	});
-}
-
-$(document).on('click touchend', '#select-attractions-button', openMenu);
-
-$(document).on('click touchend', '#close-popup', closeMenu);
-$(document).on('click touchend', '#overlay', closeMenu);
