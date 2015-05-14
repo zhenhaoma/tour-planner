@@ -8,6 +8,9 @@ var destinationLocation;
 var startMarker;
 var destinationMarker;
 
+var userLocation;
+var userMarker;
+
 // Map object storage variable
 var map;
 
@@ -119,7 +122,8 @@ function initialize() {
 	// Detect browser location support
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
-			map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+			userLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+			map.setCenter(userLocation);
 			map.setZoom(7);
 		}, function() {
 			console.log("Geolocation service failed");
@@ -165,7 +169,7 @@ function initialize() {
 		});
 	} else {
 		// Remove the button and place the input field in the parent
-		// CSS breaks if the button is removed without reordering DOM
+		// styling breaks if the button is removed without reordering DOM
 		$("#departure-time>span").remove();
 		$("#departure-time>input").attr("type", "datetime-local");
 		$("#departure-time>input").appendTo($("#departure-time").parent());
@@ -229,11 +233,14 @@ function geocodeAddress(location, assign) {
 				currentLocation = results[0].geometry.location;
 			}
 			
+			// TODO: Proper error handling and functionality
 			var mapBounds = new google.maps.LatLngBounds();
 			mapBounds.extend(startLocation);
 			mapBounds.extend(destinationLocation);
 			
-			map.fitBounds(mapBounds);
+			if (!mapBounds.isEmpty()) {
+				map.fitBounds(mapBounds);
+			}
 		} else {
 			console.log('Geocode was not successful for the following reason: ' + status);
 		}
@@ -287,11 +294,7 @@ function placeAttractions() {
 	
 }
 
-function calculateRoute() {
-	alert("Start Location: " + startLocation + "\nEnd Location: " + destinationLocation);
-	
-	console.log("Is " + travelType);
-	
+function shareRoute() {
 	if(travelType == "driving") {
 		
 	}
@@ -330,7 +333,7 @@ function setTravelType(originElement, newTravelType) {
 	}
 }
 
-function setIsLoop(checkbox) {
+function setRoundTrip(checkbox) {
 	isLooping = $(checkbox).is(":checked");
 	if (isLooping) {
 		$("#end-location").hide();

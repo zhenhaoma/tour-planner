@@ -1,3 +1,8 @@
+.navbar-brand img {
+	width: 24px;
+	display: initial;
+}
+
 .page-header {
 	border-bottom-color: #ccc;
 }
