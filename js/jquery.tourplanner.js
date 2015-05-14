@@ -5,6 +5,8 @@ var autocomplete;
 // Variables for 'autocomplete' on the start and end location text boxes
 var startLocation;
 var destinationLocation;
+var startMarker;
+var destinationMarker;
 
 // Map object storage variable
 var map;
@@ -28,8 +30,7 @@ var bicycleLayer;
 /* FOR POPUP PAGE */
 // Variables of the current location set by asynchronous method 
 var currentLocationName;
-var currentLocationLat;
-var currentLocationLng;
+var currentLocation;
 var addedAttractionsArray = new Array();
 
 
@@ -44,7 +45,7 @@ function initialize() {
 			{
 				stylers: [
 					{ hue: "#2B167B" },
-					{ saturation: 0 },
+					{ saturation: 0 }
 				]
 			},{
 				featureType: "road",
@@ -52,6 +53,11 @@ function initialize() {
 				stylers: [
 					{ lightness: 60 },
 					{ visibility: "simplified" }
+				]
+			},{
+				elementType: "labels",
+				stylers: [
+					{ visibility: "off" }
 				]
 			},{
 				featureType: "road.highway",
@@ -84,6 +90,12 @@ function initialize() {
 				]
 			},{
 				featureType: "poi",
+				elementType: "labels",
+				stylers: [
+					{ visibility: "on" }
+				]
+			},{
+				featureType: "poi",
 				elementType: "labels.text.stroke",
 				stylers: [
 					{ lightness: -100 }
@@ -94,6 +106,12 @@ function initialize() {
 				stylers: [
 					{ lightness: 100 }
 				]
+			},{
+				featureType: "administrative",
+				elementType: "labels",
+				stylers: [
+					{ visibility: "on" }
+				]
 			}
 		]
 	};
@@ -102,7 +120,7 @@ function initialize() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-			map.setZoom(6);
+			map.setZoom(7);
 		}, function() {
 			console.log("Geolocation service failed");
 		});
@@ -173,14 +191,24 @@ function initialize() {
 	// populate the address fields in the form.
 	//start location autocomplete event
 	google.maps.event.addListener(startLocationAutocomplete, 'place_changed', function() {
-
 		currentLocationName = document.getElementById('attraction-location').value;
 		geocodeAddress(document.getElementById('attraction-location').value, 3);
+		
+		$("#add-attraction").removeAttr("disabled");
 	});
 	
 	transitLayer = new google.maps.TransitLayer();
 	trafficLayer = new google.maps.TrafficLayer();
 	bicycleLayer = new google.maps.BicyclingLayer();
+	
+	startMarker = new google.maps.Marker({
+		animation: google.maps.Animation.DROP,
+		draggable: true
+	});
+	destinationMarker = new google.maps.Marker({
+		animation: google.maps.Animation.DROP,
+		draggable: true
+	});
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
@@ -189,40 +217,45 @@ function geocodeAddress(location, assign) {
 	geocoder.geocode( { 'address': location}, function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
 			//global variable assignment
-			if(assign == 1){
+			if (assign == 1) {
 				startLocation = results[0].geometry.location;
-			} else if(assign == 2){
+				startMarker.setMap(map);
+				startMarker.setPosition(startLocation);
+			} else if (assign == 2) {
 				destinationLocation = results[0].geometry.location;
-			} else if(assign == 3){
-			currentLocationLat = results[0].geometry.location.lat();
-			currentLocationLng = results[0].geometry.location.lng();
-			
+				destinationMarker.setMap(map);
+				destinationMarker.setPosition(destinationLocation);
+			} else if (assign == 3) {
+				currentLocation = results[0].geometry.location;
 			}
 			
+			var mapBounds = new google.maps.LatLngBounds();
+			mapBounds.extend(startLocation);
+			mapBounds.extend(destinationLocation);
+			
+			map.fitBounds(mapBounds);
 		} else {
-			alert('Geocode was not successful for the following reason: ' + status);
+			console.log('Geocode was not successful for the following reason: ' + status);
 		}
 	});
 }
 
 
 
-function addAttraction()
-{
-	var location = {name:currentLocationName, lat:currentLocationLat, lng:currentLocationLng};
+function addAttraction() {
+	var location = {name:currentLocationName, lat:currentLocation.lat(), lng:currentLocation.lng()};
 	addedAttractionsArray.push(location);
-
 
 	//Clears the attractions auto complete box 
 	document.getElementById("attraction-location").value = '';
+	$("#add-attraction").attr("disabled", true);
 
 	generateTable();
 }
 
 
-function generateTable()
-{
-	var table = document.getElementById("myTable");
+function generateTable() {
+	var table = document.getElementById("attraction-table");
 
 	//DELETE ENTIRE TABLE - Very crude deletion method
 	table.innerHTML = "";
@@ -243,20 +276,19 @@ function generateTable()
 
 
 // Fixed and shortened
-function deleteAttraction(button)
-{
+function deleteAttraction(button) {
 	var row = $(button).parent().parent();
 	addedAttractionsArray.splice(row.index(), 1);
 	
 	generateTable();
 }	
 
-
-
-
+function placeAttractions() {
+	
+}
 
 function calculateRoute() {
-	//alert("Start Location: " + startLocation + "\nEnd Location: " + destinationLocation);
+	alert("Start Location: " + startLocation + "\nEnd Location: " + destinationLocation);
 	
 	console.log("Is " + travelType);
 	
@@ -318,14 +350,27 @@ function loadTrip() {
 	
 }
 
+function closeMenu() {
+	if (!animateDebounce) {
+		$('#popup').slideUp(500, function() {
+			$('#overlay').fadeOut();
+		});
+		
+		placeAttractions();
+	}
+}
 
-$(document).on('click touchend', '#select-attractions-button', function(){
+// If animating, prevent window from closing
+// Fixes animation ordering bug
+var animateDebounce = false;
+
+$(document).on('click touchend', '#select-attractions-button', function() {
+	animateDebounce = true;
 	$('#overlay').fadeIn(500, function() {
 		$('#popup').slideDown();
+		animateDebounce = false;
 	});
 });
-$(document).on('click touchend', '#close-popup', function(){
-	$('#popup').slideUp(500, function() {
-		$('#overlay').fadeOut();
-	});
-});
+
+$(document).on('click touchend', '#close-popup', closeMenu);
+$(document).on('click touchend', '#overlay', closeMenu);

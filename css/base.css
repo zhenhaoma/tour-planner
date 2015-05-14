@@ -5,6 +5,7 @@
 .team-member {
     margin-bottom: 50px;
     text-align: center;
+	max-width: 433px;
 }
 
 .team-member img {
@@ -68,28 +69,41 @@ input[type="date"], input[type="time"], input[type="datetime-local"], input[type
 	line-height: 1.42857143;
 }
 
-.inner-container {
-	margin-right: auto;
-	margin-left: auto;
-	padding-left: 15px;
-	padding-right: 15px;
+.scrollable-table {
+	max-height: 340px;
+	overflow-y: auto;
 }
 
-.scrolling-y {
-	overflow-y: scroll;
-	height: 100%;
+button > .button-poptext {
+	display: none;
+}
+
+button:hover > .button-poptext {
+	display: initial;
+}
+
+.panel-title .close {
+	font-size: 24px;
+	margin-top: -3px;
 }
 
 /* Screen width specific CSS */
+/** XS **/
 @media (max-width: 767px) {
-	
+	.scrollable-table {
+		max-height: 70%;
+		overflow-y: auto;
+	}
 }
+/** SM **/
 @media (min-width: 768px) and (max-width: 991px) {
 	
 }
+/** MD **/
 @media (min-width: 992px) and (max-width: 1199px) {
 	
 }
+/** LG **/
 @media (min-width: 1200px) {
 	
 }

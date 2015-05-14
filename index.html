@@ -69,7 +69,7 @@
 	<body onload="initialize()">
 		<div id="overlay"></div>
 		<nav class="navbar navbar-inverse">
-			<div class="container">
+			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 						<span class="sr-only">Toggle navigation</span>
@@ -91,7 +91,7 @@
 				</div>
 			</div>
 		</nav>
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-6 col-md-8 map-col">
 					<div class="map-container">
@@ -101,7 +101,7 @@
 				<div class="col-sm-6 col-md-4">
 					<div id="control-panel">
 						<form>
-							<h3 class="page-header">Plan Tour</h3>
+							<h3 class="page-header">Plan Tour <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share"></span><span class="button-poptext"> Share</span></button></h3>
 							<div class="form-group">
 								<div class="input-group">
 									<input id="start-location" class="form-control" placeholder="Start Location" type="text" />
@@ -149,29 +149,24 @@
 			</div>
 		</div>
 		
-		<div id="popup">
-			<div id="close-popup"><i class="fa fa-times"></i></div>
-			<div class="inner-container">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Search for Attractions" id="attraction-location" />
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="button" onclick="addAttraction()">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button>
-							</span>
-						</div>
-					</div>
-					<div class="col-xs-12">
-						<div id="added-locations">
-							<table class="table" id="myTable">
-								
-							</table>
-						</div>
-					</div>
-				</div>
+		<div id="popup" class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Select Attractions<button type="button" class="close" id="close-popup">&times;</button></h3>
 			</div>
+			<div class="panel-body">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search for Attractions" id="attraction-location" />
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="addAttraction()" id="add-attraction" disabled>
+							<span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</span>
+				</div>						
+			</div>
+			<div class="scrollable-table">
+				<table class="table" id="attraction-table"></table>
+			</div>
+			
 		</div>
 		<br />
 	</body>

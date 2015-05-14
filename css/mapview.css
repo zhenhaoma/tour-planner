@@ -25,31 +25,16 @@
 
 #popup {
 	display: none;
-	background-color: white;
 	position: fixed;
 	width: 70%;
-	height: 70%;
-	top: 15%;
+	height: 450px;
+	top: 10%;
 	left: 15%;
 	z-index: 6;
-	
-	border-radius: 5px;
-	padding-top: 16px;
-}
-
-#close-popup {
-	position: absolute;
-	right: -10px;
-	top: -10px;
-	height: 30px;
-	width: 30px;
-	cursor: pointer;
-	font-size: 25px;
-	color: #5A5B9F;
-	text-align:center;
 }
 
 /* Screen width specific CSS */
+/** XS **/
 @media (max-width: 767px) {
 	.map-container{
 		position: relative;
@@ -63,12 +48,15 @@
 		left: 0;
 	}
 }
+/** SM **/
 @media (min-width: 768px) and (max-width: 991px) {
 	
 }
+/** MD **/
 @media (min-width: 992px) and (max-width: 1199px) {
 	
 }
+/** LG **/
 @media (min-width: 1200px) {
 	
 }
