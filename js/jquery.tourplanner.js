@@ -4,7 +4,7 @@
 /*global google, console, Modernizr, $*/
 
 // Function list
-/*global initialize, geocodeAddress, setMapViewport, calculateRoute, generateTable*/
+/*global initialize, geocodeAddress, setMapViewport, calculateRoute, generateTable, setAttractionMarkers*/
 
 // Google Maps specific variable declaration
 var geocoder;
@@ -13,11 +13,12 @@ var autocomplete;
 // Variables for 'autocomplete' on the start and end location text boxes
 var startLocation;
 var destinationLocation;
+var userLocation;
+
 var startMarker;
 var destinationMarker;
-
-var userLocation;
 var userMarker;
+var attractionMarkers = [];
 
 // Map object storage variable
 var map;
@@ -226,12 +227,10 @@ function initialize() {
 	bicycleLayer = new google.maps.BicyclingLayer();
 	
 	startMarker = new google.maps.Marker({
-		animation: google.maps.Animation.DROP,
-		draggable: true
+		animation: google.maps.Animation.DROP
 	});
 	destinationMarker = new google.maps.Marker({
-		animation: google.maps.Animation.DROP,
-		draggable: true
+		animation: google.maps.Animation.DROP
 	});
 	
 	$('[data-toggle="tooltip"]').tooltip();
@@ -290,6 +289,7 @@ function addAttraction() {
 	$("#add-attraction").attr("disabled", true);
 
 	generateTable();
+	setAttractionMarkers();
 	calculateRoute();
 }
 
@@ -330,6 +330,7 @@ function deleteAttraction(button) {
 	addedAttractionsArray.splice(row.index(), 1);
 	
 	generateTable();
+	setAttractionMarkers();
 }
 
 function placeAttractions() {
@@ -359,6 +360,21 @@ function calculateRoute() {
 	}
 	
     setMapViewport(allLocations);
+}
+
+/** Generates and regenerates all the attraction markers **/
+function setAttractionMarkers() {
+	var i;
+	// Clear current markers
+	attractionMarkers.splice(0, attractionMarkers.length)
+	for (i = 0; i < addedAttractionsArray.length; i += 1) {
+		var newMarker = new google.maps.Marker({
+			animation: google.maps.Animation.DROP,
+			map: map,
+			position: addedAttractionsArray[i].location
+		});
+		attractionMarkers.push(newMarker);
+	}
 }
 
 function setTravelType(originElement, newTravelType) {
