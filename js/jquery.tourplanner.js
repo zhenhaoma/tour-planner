@@ -1,10 +1,10 @@
+"use strict";
+
 // Global functions
 /*global google, console, Modernizr, $*/
 
 // Function list
 /*global initialize, geocodeAddress, setMapViewport, calculateRoute, generateTable*/
-
-"use strict";
 
 // Google Maps specific variable declaration
 var geocoder;
@@ -216,6 +216,8 @@ function initialize() {
 		currentLocationName = document.getElementById('attraction-location').value;
 		geocodeAddress(document.getElementById('attraction-location').value, 3);
 		
+		
+		
 		$("#add-attraction").removeAttr("disabled");
 	});
 	
@@ -253,37 +255,34 @@ function geocodeAddress(location, assign) {
 				currentLocation = results[0].geometry.location;
 			}
 			
-			setMapViewport(startLocation, destinationLocation);
-			
-			calculateRoute();
+			if (assign !== 3) {
+				calculateRoute();
+			}
 		} else {
 			console.log('Geocode was not successful for the following reason: ' + status);
 		}
 	});
 }
 
-/** Pass nulls for zooming on singular objects **/
-function setMapViewport(start, end) {
-	// TODO: Proper error handling and functionality
-	if (start || end) {
-		var mapBounds = new google.maps.LatLngBounds();
-		if (start) {
-			mapBounds.extend(start);
-		}
-		if (end) {
-			mapBounds.extend(end);
+
+function setMapViewport(arrayOfLocations) {
+	var i, mapBounds;
+	mapBounds = new google.maps.LatLngBounds();
+	if (arrayOfLocations.length > 0) {
+		for (i = 0; i < arrayOfLocations.length; i += 1) {
+			mapBounds.extend(arrayOfLocations[i]);
 		}
 		
 		map.fitBounds(mapBounds);
 		
-		if (!end) {
+		if (arrayOfLocations.length === 1) {
 			map.setZoom(reasonableZoom);
 		}
 	}
 }
 
 function addAttraction() {
-	var location = {name: currentLocationName, lat: currentLocation.lat(), lng: currentLocation.lng()};
+	var location = {name: currentLocationName, location: currentLocation};
 	addedAttractionsArray.push(location);
 
 	// Clears the attractions auto complete box 
@@ -291,6 +290,7 @@ function addAttraction() {
 	$("#add-attraction").attr("disabled", true);
 
 	generateTable();
+	calculateRoute();
 }
 
 
@@ -341,7 +341,24 @@ function shareRoute() {
 }
 
 function calculateRoute() {
-    
+	// Calculate and draw directions
+	
+	// Set the maps view
+	var allLocations, i;
+	allLocations = [];
+	if (startLocation !== undefined) {
+		allLocations.push(startLocation);
+	}
+	if (destinationLocation !== undefined) {
+		allLocations.push(destinationLocation);
+	}
+	if (addedAttractionsArray.length !== 0) {
+		for (i = 0; i < addedAttractionsArray.length; i += 1) {
+			allLocations.push(addedAttractionsArray[i].location);
+		}
+	}
+	
+    setMapViewport(allLocations);
 }
 
 function setTravelType(originElement, newTravelType) {
@@ -351,9 +368,9 @@ function setTravelType(originElement, newTravelType) {
 	});
 	$(originElement).attr("class", "btn btn-success");
 	
-	transitLayer.setMap(null);
-	bicycleLayer.setMap(null);
-	trafficLayer.setMap(null);
+	transitLayer.setMap(undefined);
+	bicycleLayer.setMap(undefined);
+	trafficLayer.setMap(undefined);
 	
 	switch (travelType) {
     case "transit":

@@ -1,3 +1,9 @@
+@media (min-width: 768px) {
+	html, body, .container-fluid, .row, .col-map {
+		height: 100%;
+	}
+}
+
 body {
 	padding-top: 70px;
 }
@@ -10,7 +16,7 @@ body {
 .map-container {
     position: relative;
     width: 100%;
-    height: 500px;
+    height: 95%;
 	margin-bottom: 20px;
 }
 .map-container .map-canvas {
@@ -120,7 +126,7 @@ button:hover > .button-poptext {
 	}
 	.map-container {
 		width: 100%;
-		height: 400px;
+		height: 500px;
 	}
 	.map-container .map-canvas {
 		border-radius: 0;
@@ -145,24 +151,52 @@ button:hover > .button-poptext {
 	
 }
 
-/* Screen height CSS */
-@media (max-height: 700px) {
+/** Screen height for mobiles CSS **/
+/* Smaller than i4 or landscape */
+@media (max-height: 479px) and (max-width: 767px) {
 	.map-container {
-		height: 290px;
+		height: 0;
 	}
 }
-@media (max-height: 600px) {
-	.map-container {
-		height: 230px;
-	}
-}
-@media (max-height: 550px) {
-	.map-container {
-		height: 200px;
-	}
-}
-@media (max-height: 500px) {
+/* i4 */
+@media (min-height: 480px) and (max-width: 767px) {
 	.map-container {
 		height: 160px;
+	}
+}
+/* Nexus S */
+@media (min-height: 533px) and (max-width: 767px) {
+	.map-container {
+		height: 220px;
+	}
+}
+/* i5 */
+@media (min-height: 568px) and (max-width: 767px) {
+	.map-container {
+		height: 250px;
+	}
+}
+/* Galaxy S4 */
+@media (min-height: 640px) and (max-width: 767px) {
+	.map-container {
+		height: 320px;
+	}
+}
+/* i6 */
+@media (min-height: 667px) and (max-width: 767px) {
+	.map-container {
+		height: 350px;
+	}
+}
+/* i6+ */
+@media (min-height: 736px) and (max-width: 767px) {
+	.map-container {
+		height: 420px;
+	}
+}
+/* Droid 3, 4 */
+@media (min-height: 960px) and (max-width: 767px) {
+	.map-container {
+		height: 640px;
 	}
 }
