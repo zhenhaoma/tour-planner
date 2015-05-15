@@ -234,6 +234,8 @@ function initialize() {
 	});
 	
 	$('[data-toggle="tooltip"]').tooltip();
+	
+	$("#attraction-table-container").hide();
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
@@ -306,20 +308,25 @@ function generateTable() {
 	table = document.getElementById("attraction-table");
 
 	// Delete contents of table
-	table.innerHTML = "";
+	$(table).empty();
 	
-	for (i = 0; i < addedAttractionsArray.length; i += 1) {
-		row = table.insertRow(-1);
+	if (addedAttractionsArray.length === 0) {
+		$("#attraction-table-container").hide();
+	} else {
+		$("#attraction-table-container").show();
+		for (i = 0; i < addedAttractionsArray.length; i += 1) {
+			row = table.insertRow(-1);
 
-		locationNameCell = row.insertCell(0);
-		travelInfoCell = row.insertCell(1);
-		infoButtonCell = row.insertCell(2);
-		closeButtonCell = row.insertCell(3);
+			locationNameCell = row.insertCell(0);
+			travelInfoCell = row.insertCell(1);
+			infoButtonCell = row.insertCell(2);
+			closeButtonCell = row.insertCell(3);
 
-		locationNameCell.innerHTML = addedAttractionsArray[i].name;
-		travelInfoCell.innerHTML = "00:00 0km";
-		infoButtonCell.innerHTML = "<span class='glyphicon glyphicon-info-sign'></span>";
-		closeButtonCell.innerHTML = "<button type='button' class='close' onclick='deleteAttraction(this)'>&times;</button>";
+			locationNameCell.innerHTML = addedAttractionsArray[i].name;
+			travelInfoCell.innerHTML = "00:00 0km";
+			infoButtonCell.innerHTML = "<span class='glyphicon glyphicon-info-sign'></span>";
+			closeButtonCell.innerHTML = "<button type='button' class='close' onclick='deleteAttraction(this)'>&times;</button>";
+		}
 	}
 }
 
@@ -366,7 +373,12 @@ function calculateRoute() {
 function setAttractionMarkers() {
 	var i;
 	// Clear current markers
-	attractionMarkers.splice(0, attractionMarkers.length)
+	for (i = 0; i < attractionMarkers.length; i += 1) {
+		attractionMarkers[i].setMap(null);
+	}
+	attractionMarkers = [];
+	
+	// Add all attractions to map
 	for (i = 0; i < addedAttractionsArray.length; i += 1) {
 		var newMarker = new google.maps.Marker({
 			animation: google.maps.Animation.DROP,
@@ -413,7 +425,9 @@ function setRoundTrip(button) {
 		destinationLocation = null;
 		$("#end-location").val("");
 		
-		setMapViewport(startLocation, null);
+		if (startLocation !== undefined) {
+			setMapViewport([startLocation]);
+		}
 	} else {
 		isLooping = false;
 		$("#end-location").show();
@@ -423,8 +437,7 @@ function setRoundTrip(button) {
 }
 
 /** Save and load the trip at the beginning and end of each session, 
-	Save/load buttons are not user friendly
-**/
+	Save/load buttons are not user friendly **/
 function saveTrip() {
 	
 }
