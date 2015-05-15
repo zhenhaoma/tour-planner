@@ -338,6 +338,7 @@ function deleteAttraction(button) {
 	
 	generateTable();
 	setAttractionMarkers();
+	calculateRoute();
 }
 
 function placeAttractions() {
@@ -354,16 +355,14 @@ function calculateRoute() {
 	// Set the maps view
 	var allLocations, i;
 	allLocations = [];
-	if (startLocation !== undefined) {
+	if (startLocation != undefined) {
 		allLocations.push(startLocation);
 	}
-	if (destinationLocation !== undefined) {
+	if (destinationLocation != undefined) {
 		allLocations.push(destinationLocation);
 	}
-	if (addedAttractionsArray.length !== 0) {
-		for (i = 0; i < addedAttractionsArray.length; i += 1) {
-			allLocations.push(addedAttractionsArray[i].location);
-		}
+	for (i = 0; i < addedAttractionsArray.length; i += 1) {
+		allLocations.push(addedAttractionsArray[i].location);
 	}
 	
     setMapViewport(allLocations);
@@ -424,16 +423,13 @@ function setRoundTrip(button) {
 		
 		destinationLocation = null;
 		$("#end-location").val("");
-		
-		if (startLocation !== undefined) {
-			setMapViewport([startLocation]);
-		}
 	} else {
 		isLooping = false;
 		$("#end-location").show();
 		$(button).addClass("btn-default");
 		$(button).removeClass("btn-success");
 	}
+	calculateRoute();
 }
 
 /** Save and load the trip at the beginning and end of each session, 
