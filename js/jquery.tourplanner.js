@@ -196,7 +196,7 @@ function initialize() {
 		// Remove the button and place the input field in the parent
 		// styling breaks if the button is removed without reordering DOM
 		$("#departure-time>span").remove();
-		$("#departure-time").attr("type", "datetime-local");
+		$("#departure-time>input").attr("type", "datetime-local");
 		$("#departure-time>input").appendTo($("#departure-time").parent());
 	}
 
