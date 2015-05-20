@@ -77,12 +77,13 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#"><img alt="SIT302 Solutions" src="img/brand-icon.png" /> Pointour</a>
+					<a class="navbar-brand" href="#"><img alt="SIT302 Solutions" src="img/brand-icon.png" /> <span class="visible-xs-inline current-tab-title">Plan Tour</span><span class="hidden-xs">Pointour</span></a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
+					<ul class="nav navbar-nav" role="tablist" id="planTab">
 						<li role="presentation" class="active hidden-xs"><a href="#plantour" aria-controls="plantour" role="tab" data-toggle="tab">Plan Tour</a></li>
 						<li role="presentation" class="hidden-xs"><a href="#planstops" aria-controls="planstops" role="tab" data-toggle="tab">Visit Attractions</a></li>
+						<li role="presentation" class="hidden-xs"><a href="#plannights" aria-controls="plannights" role="tab" data-toggle="tab">Night Stops</a></li>
 						<li class="active visible-xs"><a href="#">Plan Tour</a></li>
 						<li><a href="about.html">About</a></li>
 						<li><a href="help.html">Help</a></li>
@@ -105,57 +106,53 @@
 
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div role="tabpanel" class="tab-pane fade in active" id="plantour">
-								<form>
-									<div class="page-header hidden-xs">
-										<h3>Plan Tour <button type="button" class="btn btn-default btn-xs" onclick="shareRoute()"><span class="glyphicon glyphicon-share"></span><span class="button-poptext"> Share</span></button></h3>
+							<div role="tabpanel" class="tab-pane active" id="plantour">
+								<div class="page-header hidden-xs">
+									<h3>Plan Tour <button type="button" class="btn btn-default btn-xs" onclick="shareRoute()"><span class="glyphicon glyphicon-share"></span><span class="button-poptext"> Share</span></button></h3>
+								</div>
+								<label for="start-location" class="hidden-xs">Overall Travel Plan</label>
+								<div class="form-group">
+									<div class="input-group">
+										<input id="start-location" name="start-location" class="form-control" placeholder="Start Location" type="text" />
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default" aria-pressed="false" data-toggle="button" autocomplete="off" onclick="setRoundTrip(this)" ontouchend="setRoundTrip(this)" name="isRoundTrip">
+												<span class="glyphicon glyphicon-repeat"></span>
+											</button>
+										</span>
 									</div>
-									<div class="form-group">
-										<div class="input-group">
-											<input id="start-location" name="start-location" class="form-control" placeholder="Start Location" type="text" />
-											<span class="input-group-btn">
-												<button type="button" class="btn btn-default" aria-pressed="false" data-toggle="button" autocomplete="off" onclick="setRoundTrip(this)" ontouchend="setRoundTrip(this)" name="isRoundTrip">
-													<span class="glyphicon glyphicon-repeat"></span>
-												</button>
-											</span>
+								</div>
+								<div class="form-group">
+									<input id="end-location" name="end-location" class="form-control" placeholder="Destination" type="text" />
+								</div>
+								<div class="form-group">
+									<label for="travel-mode" class="hidden-xs">Travel Mode</label>
+									<div class="btn-group btn-group-justified" id="travel-mode" role="group">
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-default" onclick="setTravelType(this, 'driving')" ontouchend="setTravelType(this, 'driving')">Driving</button>
+										</div>
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-success" onclick="setTravelType(this, 'walking')" ontouchend="setTravelType(this, 'walking')">Walking</button>
+										</div>
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-default" onclick="setTravelType(this, 'cycling')" ontouchend="setTravelType(this, 'cycling')">Cycling</button>
+										</div>
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-default" onclick="setTravelType(this, 'transit')" ontouchend="setTravelType(this, 'transit')">Transit</button>
 										</div>
 									</div>
-									<div class="form-group">
-										<input id="end-location" name="end-location" class="form-control" placeholder="Destination" type="text" />
+									<input type="hidden" id="travel-mode" name="travel-mode"></input>
+								</div>
+								<div class="form-group">
+									<label for="departure-time" class="hidden-xs">Departure Time</label>
+									<div class="input-group date" id="departure-time">
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+										<input type="text" class="form-control" placeholder="Enter a Date" name="departure-time" />
 									</div>
-									<div class="form-group">
-										<label for="travel-mode" class="hidden-xs">Travel Mode</label>
-										<div class="btn-group btn-group-justified" id="travel-mode" role="group">
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-default" onclick="setTravelType(this, 'driving')" ontouchend="setTravelType(this, 'driving')">Driving</button>
-											</div>
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-success" onclick="setTravelType(this, 'walking')" ontouchend="setTravelType(this, 'walking')">Walking</button>
-											</div>
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-default" onclick="setTravelType(this, 'cycling')" ontouchend="setTravelType(this, 'cycling')">Cycling</button>
-											</div>
-											<div class="btn-group" role="group">
-												<button type="button" class="btn btn-default" onclick="setTravelType(this, 'transit')" ontouchend="setTravelType(this, 'transit')">Transit</button>
-											</div>
-										</div>
-										<input type="hidden" id="travel-mode" name="travel-mode"></input>
-									</div>
-									<div class="form-group">
-										<label for="departure-time" class="hidden-xs">Departure Time</label>
-										<div class="input-group date" id="departure-time">
-											<span class="input-group-addon">
-												<span class="glyphicon glyphicon-calendar"></span>
-											</span>
-											<input type="text" class="form-control" placeholder="Enter a Date" name="departure-time" />
-										</div>
-									</div>
-									<div class="form-group text-center visible-xs">
-										<a class="btn btn-primary" href="#planstops" aria-controls="planstops" role="tab" data-toggle="tab">Select Attractions</a>
-									</div>
-								</form>
+								</div>
 							</div>
-							<div role="tabpanel" class="tab-pane fade" id="planstops">
+							<div role="tabpanel" class="tab-pane" id="planstops">
 								<div class="page-header hidden-xs">
 									<h3>Tour Attractions</h3>
 								</div>
@@ -172,14 +169,34 @@
 								<div id="attraction-table-container" class="panel panel-default scrollable-table">
 									<table class="table table-striped" id="attraction-table"></table>
 								</div>
-								<div class="form-group text-center visible-xs">
-									<a class="btn btn-primary" href="#plantour" aria-controls="plantour" role="tab" data-toggle="tab">Back to Planning</a>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="plannights">
+								<div class="page-header hidden-xs">
+									<h3>Rest and Relaxation</h3>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<input type="text" class="form-control" placeholder="Search for Hotels" id="hotel-location" />
+										<span class="input-group-btn">
+											<button class="btn btn-default" type="button" onclick="addHotel()" id="add-hotel" disabled>
+												<span class="glyphicon glyphicon-plus"></span>
+											</button>
+										</span>
+									</div>						
+								</div>
+								<div id="hotel-table-container" class="panel panel-default scrollable-table">
+									<table class="table table-striped" id="hotel-table"></table>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="visible-xs" id="footer-tabs">
+			<a href="#plantour" class="active" onclick="changeTab('#plantour')">Plan Tour</a>
+			<a href="#planstops" onclick="changeTab('#planstops')">Attractions</a>
+			<a href="#plannights" onclick="changeTab('#plannights')"><span class="glyphicon glyphicon-bed"></span> Hotels</a>
 		</div>
 	</body>
 </html>
