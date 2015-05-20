@@ -6,50 +6,46 @@
 
 // Function list
 /*global initialize, geocodeAddress, setMapViewport, calculateRoute,
-	generateTable, setAttractionMarkers, setHotelMarkers,
+	generateTable, setAttractionMarkers,
 	initPlanTour, initAttractions, initHotels*/
 
 // Initialised in mapproperties.js
 /*global reasonableZoom, mapProperties*/
 
 // Google Maps specific variable declaration
-var geocoder;
+var geocoder,
+	directionsDisplay,
+	directionsService,
+	map;
 
 // Variables for 'autocomplete' on the start and end location text boxes
-var startLocation;
-var destinationLocation;
-var userLocation;
+var startLocation,
+	endLocation,
+	userLocation;
 
-var startMarker;
-var destinationMarker;
 var userMarker;
-var attractionMarkers = [];
-
-// Map object storage variable
-var map;
 
 // Store the travel type
-var travelType = "walking";
-var isLooping = false;
+var travelType = "walking",
+	isLooping = false;
 
 var minimumRating = 2;
 
 // End of time (for cookie storage purposes)
-var endOfTime = "expires=Fri, 31 Dec 9999 23:59:59 GMT;";
-var immediate = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+var endOfTime = "expires=Fri, 31 Dec 9999 23:59:59 GMT;",
+	immediate = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
 // Transit, traffic, and bicycle layers
-var transitLayer;
-var trafficLayer;
-var bicycleLayer;
+var transitLayer,
+	trafficLayer,
+	bicycleLayer;
 
 /* FOR POPUP PAGE */
 // Variables of the current location set by asynchronous method 
-var currentLocationName;
-var currentLocation;
+var currentLocationName,
+	currentLocation;
 
 var addedAttractionsArray = [];
-var addedHotelsArray = [];
 
 
 function initialize() {
@@ -80,6 +76,10 @@ function initPlanTour() {
 		
 	//Add Map to Div
 	map = new google.maps.Map(document.getElementById("map-canvas"), mapProperties);
+	
+	// Prepare directions API
+	directionsDisplay = new google.maps.DirectionsRenderer();
+	directionsService = new google.maps.DirectionsService();
 
 	//Initialise Geocoder object
 	geocoder = new google.maps.Geocoder();
@@ -117,13 +117,6 @@ function initPlanTour() {
 	transitLayer = new google.maps.TransitLayer();
 	trafficLayer = new google.maps.TrafficLayer();
 	bicycleLayer = new google.maps.BicyclingLayer();
-	
-	startMarker = new google.maps.Marker({
-		animation: google.maps.Animation.DROP
-	});
-	destinationMarker = new google.maps.Marker({
-		animation: google.maps.Animation.DROP
-	});
 }
 
 function initAttractions() {
@@ -151,8 +144,12 @@ function initAttractions() {
 }
 
 function initHotels() {
-	console.log("test");
 	$("#cost-range").slider({});
+	
+	$("#cost-range").on("slide", function (slideEvt) {
+		$("#cost-min").text("$" + slideEvt.value[0]);
+		$("#cost-max").text("$" + slideEvt.value[1]);
+	});
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
@@ -163,12 +160,8 @@ function geocodeAddress(location, assign) {
 			//global variable assignment
 			if (assign === 1) {
 				startLocation = results[0].geometry.location;
-				startMarker.setMap(map);
-				startMarker.setPosition(startLocation);
 			} else if (assign === 2) {
-				destinationLocation = results[0].geometry.location;
-				destinationMarker.setMap(map);
-				destinationMarker.setPosition(destinationLocation);
+				endLocation = results[0].geometry.location;
 			} else if (assign === 3) {
 				currentLocation = results[0].geometry.location;
 			}
@@ -208,19 +201,7 @@ function addAttraction() {
 	$("#add-attraction").attr("disabled", true);
 
 	generateTable();
-	setAttractionMarkers();
-	calculateRoute();
-}
-
-function addHotel() {
-	var location = {name: currentLocationName, location: currentLocation};
-	addedHotelsArray.push(location);
-	
-	document.getElementById("hotel-location").value = '';
-	$("#add-attraction").attr("disabled", true);
-
-	generateTable();
-	setHotelMarkers();
+//	setAttractionMarkers();
 	calculateRoute();
 }
 
@@ -265,7 +246,7 @@ function deleteAttraction(button) {
 	addedAttractionsArray.splice(row.index(), 1);
 	
 	generateTable();
-	setAttractionMarkers();
+//	setAttractionMarkers();
 	calculateRoute();
 }
 
@@ -273,17 +254,76 @@ function shareRoute() {
 	
 }
 
+/** Get the Google travel method **/
+function getGTravelMode() {
+	var travelMode;
+	if (travelType === "driving") {
+		travelMode = google.maps.TravelMode.DRIVING;
+	} else if (travelType === "walking") {
+		travelMode = google.maps.TravelMode.WALKING;
+	} else if (travelType === "cycling") {
+		travelMode = google.maps.TravelMode.BICYCLING;
+	} else if (travelType === "transit") {
+		travelMode = google.maps.TravelMode.TRANSIT;
+	}
+	return travelMode;
+}
+
 function calculateRoute() {
+	// Function level variables
+	var request,
+		allLocations,
+		waypoints = [],
+		i;
+	
 	// Calculate and draw directions
+	for (i = 0; i < addedAttractionsArray.length; i += 1) {
+		console.log(addedAttractionsArray[i].location);
+		waypoints.push({
+			location: addedAttractionsArray[i].location,
+			stopover: true
+		});
+	}
+	
+	if (startLocation != undefined && endLocation != undefined) {
+		directionsDisplay.setMap(map);
+		request = {
+			origin: startLocation,
+			destination: endLocation,
+			travelMode: getGTravelMode(),
+			waypoints: waypoints,
+			optimizeWaypoints: true
+		};
+		directionsService.route(request, function (response, status) {
+			if (status === google.maps.DirectionsStatus.OK) {
+				directionsDisplay.setDirections(response);
+			}
+		});
+	} else if (startLocation != undefined && isLooping) {
+		directionsDisplay.setMap(map);
+		request = {
+			origin: startLocation,
+			destination: startLocation,
+			travelMode: getGTravelMode(),
+			waypoints: waypoints,
+			optimizeWaypoints: true
+		};
+		directionsService.route(request, function (response, status) {
+			if (status === google.maps.DirectionsStatus.OK) {
+				directionsDisplay.setDirections(response);
+			}
+		});
+	} else {
+		directionsDisplay.setMap(null);
+	}
 	
 	// Set the maps view
-	var allLocations, i;
 	allLocations = [];
 	if (startLocation != undefined) {
 		allLocations.push(startLocation);
 	}
-	if (destinationLocation != undefined) {
-		allLocations.push(destinationLocation);
+	if (endLocation != undefined) {
+		allLocations.push(endLocation);
 	}
 	for (i = 0; i < addedAttractionsArray.length; i += 1) {
 		allLocations.push(addedAttractionsArray[i].location);
@@ -293,7 +333,7 @@ function calculateRoute() {
 }
 
 /** Generates and regenerates all the attraction markers **/
-function setAttractionMarkers() {
+/*function setAttractionMarkers() {
 	var i, newMarker;
 	// Clear current markers
 	for (i = 0; i < attractionMarkers.length; i += 1) {
@@ -310,11 +350,7 @@ function setAttractionMarkers() {
 		});
 		attractionMarkers.push(newMarker);
 	}
-}
-
-function setHotelMarkers() {
-	
-}
+}*/
 
 function setTravelType(originElement, newTravelType) {
 	travelType = newTravelType;
@@ -338,6 +374,8 @@ function setTravelType(originElement, newTravelType) {
         trafficLayer.setMap(map);
         break;
 	}
+	
+	calculateRoute();
 }
 
 function setRating(originElement, newRating) {
@@ -357,7 +395,7 @@ function setRoundTrip(button) {
 		$(button).addClass("btn-success");
 		$(button).removeClass("btn-default");
 		
-		destinationLocation = null;
+		endLocation = null;
 		$("#end-location").val("");
 	} else {
 		isLooping = false;

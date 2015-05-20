@@ -164,6 +164,17 @@ button:hover > .button-poptext {
 	color: #fff;
 }
 
+.slider-handle {
+	background-image: none;
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+
+.slider-selection {
+	background-image: none;
+	background-color: #08CA74;
+}
+
 .affix {
   top: 70px;
   width: 213px;
