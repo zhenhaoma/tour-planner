@@ -1,7 +1,8 @@
+/*jslint browser: true, devel: true, eqeq: true*/
 "use strict";
 
 // Global functions
-/*global google, console, Modernizr, $*/
+/*global google, Modernizr, $*/
 
 // Function list
 /*global initialize, geocodeAddress, setMapViewport, calculateRoute, generateTable, setAttractionMarkers*/
@@ -47,6 +48,11 @@ var currentLocationName;
 var currentLocation;
 var addedAttractionsArray = [];
 
+// Company colours
+var blueIris = "#2B167B";
+var emerald = "#08CA74";
+var bellyDance = "#F05329";
+
 
 function initialize() {
 	//Map Specifications
@@ -60,13 +66,13 @@ function initialize() {
     
 	mapProp = {
 		center: australia,
-		zoom: 4,
+		zoom: fullZoom,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		disableDefaultUI: true,
 		styles: [
 			{
 				stylers: [
-					{ hue: "#2B167B" },
+					{ hue: blueIris },
 					{ saturation: 0 }
 				]
 			}, {
@@ -85,13 +91,13 @@ function initialize() {
 				featureType: "road.highway",
 				elementType: "geometry",
 				stylers: [
-					{ hue: "#F05329" }
+					{ hue: bellyDance }
 				]
 			}, {
 				featureType: "poi.attraction",
 				elementType: "geometry",
 				stylers: [
-					{ hue: "#F05329" },
+					{ hue: bellyDance },
 					{ saturation: 50 },
 					{ lightness: -10 }
 				]
@@ -99,7 +105,7 @@ function initialize() {
 				featureType: "poi.sports_complex",
 				elementType: "geometry",
 				stylers: [
-					{ hue: "#F05329" },
+					{ hue: bellyDance },
 					{ saturation: 50 },
 					{ lightness: -10 }
 				]
@@ -107,7 +113,7 @@ function initialize() {
 				featureType: "poi.park",
 				elementType: "geometry",
 				stylers: [
-					{ hue: "#08CA74" },
+					{ hue: emerald },
 					{ saturation: 50 }
 				]
 			}, {
@@ -190,7 +196,7 @@ function initialize() {
 		// Remove the button and place the input field in the parent
 		// styling breaks if the button is removed without reordering DOM
 		$("#departure-time>span").remove();
-		$("#departure-time>input").attr("type", "datetime-local");
+		$("#departure-time").attr("type", "datetime-local");
 		$("#departure-time>input").appendTo($("#departure-time").parent());
 	}
 
@@ -370,7 +376,7 @@ function calculateRoute() {
 
 /** Generates and regenerates all the attraction markers **/
 function setAttractionMarkers() {
-	var i;
+	var i, newMarker;
 	// Clear current markers
 	for (i = 0; i < attractionMarkers.length; i += 1) {
 		attractionMarkers[i].setMap(null);
@@ -379,7 +385,7 @@ function setAttractionMarkers() {
 	
 	// Add all attractions to map
 	for (i = 0; i < addedAttractionsArray.length; i += 1) {
-		var newMarker = new google.maps.Marker({
+		newMarker = new google.maps.Marker({
 			animation: google.maps.Animation.DROP,
 			map: map,
 			position: addedAttractionsArray[i].location
@@ -443,7 +449,16 @@ function loadTrip() {
 }
 
 function changeTab(tabName) {
-	var tabs = $("[aria-controls='" + tabName + "']");
-	console.log(tabs);
+	var newTab = $("#planTab a[href='" + tabName + "']");
+	newTab.tab("show");
+	
+	$("#footer-tabs a").each(function () {
+		$(this).removeAttr("class");
+		if ($(this).attr("href") === tabName) {
+			$(this).attr("class", "active");
+		}
+	});
+	
+	$(".current-tab-title").html($("#planTab>.active>a").html());
 }
 
