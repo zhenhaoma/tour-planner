@@ -6,7 +6,7 @@
 
 // Function list
 /*global initialize, geocodeAddress, setMapViewport, calculateRoute,
-	generateTable, setAttractionMarkers,
+	generateTable, setAttractionMarkers, notifyUser, removeNotifications,
 	initPlanTour, initAttractions, initHotels*/
 
 // Initialised in mapproperties.js
@@ -357,7 +357,13 @@ function setTravelType(originElement, newTravelType) {
 	$("#travel-mode>.btn-group").each(function () {
 		$(this).children().first().attr("class", "btn btn-default");
 	});
-	$(originElement).attr("class", "btn btn-success");
+	if (newTravelType === "transit") {
+		$(originElement).attr("class", "btn btn-warning");
+		notifyUser("<span class='glyphicon glyphicon-warning-sign'></span> Experimental Transit.", "This travel mode is experimental and subject to change by Google", "warning");
+	} else {
+		$(originElement).attr("class", "btn btn-success");
+		removeNotifications();
+	}
 	
 	transitLayer.setMap(undefined);
 	bicycleLayer.setMap(undefined);
@@ -428,5 +434,16 @@ function changeTab(tabName) {
 	});
 	
 	$(".current-tab-title").html($("#planTab>.active>a").html());
+}
+
+/** type includes success, info, warning, danger **/
+function notifyUser(title, text, type) {
+	// Can't do multiline strings apparently?
+	var html = "<div class='alert alert-" + type + " alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>" + title + "</strong> " + text + "</div>";
+	$("#popup-container").append(html);
+}
+
+function removeNotifications() {
+	$("#popup-container").html("");
 }
 

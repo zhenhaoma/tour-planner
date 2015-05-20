@@ -22,6 +22,16 @@ body {
 	border-radius: 8px;
 }
 
+#popup-container {
+	position: fixed;
+	top: 70px;
+	
+	left: 0;
+	right: 0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
 .page-header {
 	border-bottom-color: #ccc;
 	margin-top: 20px;
