@@ -149,6 +149,28 @@ button:hover > .button-poptext {
 	color: #fff;
 }
 
+.affix {
+  top: 70px;
+  width: 213px;
+}
+ 
+@media (min-width: 1200px) {
+  .affix {
+    width: 263px;
+  }         
+}
+
+.affix-bottom {
+  position: absolute;
+  width: 213px;
+}
+ 
+@media (min-width: 1200px) {
+  .affix-bottom {
+    width: 263px;
+  }
+}
+
 /* Screen width specific CSS */
 /** XS **/
 @media (max-width: 767px) {
