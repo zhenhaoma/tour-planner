@@ -5,11 +5,15 @@
 /*global google, Modernizr, $*/
 
 // Function list
-/*global initialize, geocodeAddress, setMapViewport, calculateRoute, generateTable, setAttractionMarkers*/
+/*global initialize, geocodeAddress, setMapViewport, calculateRoute,
+	generateTable, setAttractionMarkers, setHotelMarkers,
+	initPlanTour, initAttractions, initHotels*/
+
+// Initialised in mapproperties.js
+/*global reasonableZoom, mapProperties*/
 
 // Google Maps specific variable declaration
 var geocoder;
-var autocomplete;
 
 // Variables for 'autocomplete' on the start and end location text boxes
 var startLocation;
@@ -28,14 +32,11 @@ var map;
 var travelType = "walking";
 var isLooping = false;
 
+var minimumRating = 2;
+
 // End of time (for cookie storage purposes)
 var endOfTime = "expires=Fri, 31 Dec 9999 23:59:59 GMT;";
 var immediate = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-
-// Preset Locations
-var australia = new google.maps.LatLng(-24.994167, 134.866944);
-var fullZoom = 4;
-var reasonableZoom = 10;
 
 // Transit, traffic, and bicycle layers
 var transitLayer;
@@ -46,103 +47,23 @@ var bicycleLayer;
 // Variables of the current location set by asynchronous method 
 var currentLocationName;
 var currentLocation;
-var addedAttractionsArray = [];
 
-// Company colours
-var blueIris = "#2B167B";
-var emerald = "#08CA74";
-var bellyDance = "#F05329";
+var addedAttractionsArray = [];
+var addedHotelsArray = [];
 
 
 function initialize() {
-	//Map Specifications
-    
-    // Function scope variables
-    var mapProp,
-        startLocationAutocomplete,
-        destinationLocationAutocomplete,
-        options,
-        input;
-    
-	mapProp = {
-		center: australia,
-		zoom: fullZoom,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		disableDefaultUI: true,
-		styles: [
-			{
-				stylers: [
-					{ hue: blueIris },
-					{ saturation: 0 }
-				]
-			}, {
-				featureType: "road",
-				elementType: "geometry",
-				stylers: [
-					{ lightness: 60 },
-					{ visibility: "simplified" }
-				]
-			}, {
-				elementType: "labels",
-				stylers: [
-					{ visibility: "off" }
-				]
-			}, {
-				featureType: "road.highway",
-				elementType: "geometry",
-				stylers: [
-					{ hue: bellyDance }
-				]
-			}, {
-				featureType: "poi.attraction",
-				elementType: "geometry",
-				stylers: [
-					{ hue: bellyDance },
-					{ saturation: 50 },
-					{ lightness: -10 }
-				]
-			}, {
-				featureType: "poi.sports_complex",
-				elementType: "geometry",
-				stylers: [
-					{ hue: bellyDance },
-					{ saturation: 50 },
-					{ lightness: -10 }
-				]
-			}, {
-				featureType: "poi.park",
-				elementType: "geometry",
-				stylers: [
-					{ hue: emerald },
-					{ saturation: 50 }
-				]
-			}, {
-				featureType: "poi",
-				elementType: "labels",
-				stylers: [
-					{ visibility: "on" }
-				]
-			}, {
-				featureType: "poi",
-				elementType: "labels.text.stroke",
-				stylers: [
-					{ lightness: -100 }
-				]
-			}, {
-				featureType: "poi",
-				elementType: "labels.text.fill",
-				stylers: [
-					{ lightness: 100 }
-				]
-			}, {
-				featureType: "administrative",
-				elementType: "labels",
-				stylers: [
-					{ visibility: "on" }
-				]
-			}
-		]
-	};
+	initPlanTour();
+	initAttractions();
+	initHotels();
+}
+
+function initPlanTour() {
+	// Function scope variables
+    var startAutocomplete,
+		endAutocomplete,
+		attractionAutocomplete,
+		hotelAutocomplete;
 	
 	// Detect browser location support
 	if (navigator.geolocation) {
@@ -158,35 +79,30 @@ function initialize() {
 	}
 		
 	//Add Map to Div
-	map = new google.maps.Map(document.getElementById("map-canvas"), mapProp);
+	map = new google.maps.Map(document.getElementById("map-canvas"), mapProperties);
 
 	//Initialise Geocoder object
 	geocoder = new google.maps.Geocoder();
 
 	// Initialising the autocomplete objects, restricting the search
 	// to geographical location types.
-	startLocationAutocomplete = new google.maps.places.Autocomplete((document.getElementById('start-location')), { types: ['geocode'] });
-	destinationLocationAutocomplete = new google.maps.places.Autocomplete((document.getElementById('end-location')), { types: ['geocode'] });
+	startAutocomplete = new google.maps.places.Autocomplete((document.getElementById('start-location')), { types: ['geocode'] });
+	endAutocomplete = new google.maps.places.Autocomplete((document.getElementById('end-location')), { types: ['geocode'] });
 
 
 	// When the user selects an address from the dropdown,
 	// populate the address fields in the form.
 	// start location autocomplete event
-	google.maps.event.addListener(startLocationAutocomplete, 'place_changed', function () {
+	google.maps.event.addListener(startAutocomplete, 'place_changed', function () {
 		geocodeAddress(document.getElementById('start-location').value, 1);
 	});
 
 	// destination location autocomplete event
-	google.maps.event.addListener(destinationLocationAutocomplete, 'place_changed', function () {
+	google.maps.event.addListener(endAutocomplete, 'place_changed', function () {
 		geocodeAddress(document.getElementById('end-location').value, 2);
 	});
 	
-	
-	//------------------------------------------------------------------------------------------------------------------------
-	//POPUPWINDOW 
-	//------------------------------------------------------------------------------------------------------------------------
-
-	//POPUPWINDOW: Initialise date picker for departure time
+	// Initialise date picker for departure time
 	if (!Modernizr.inputtypes['datetime-local']  || navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
 		$("#departure-time").datetimepicker({
 			sideBySide: true,
@@ -195,38 +111,8 @@ function initialize() {
 	} else {
 		// Remove the button and place the input field in the parent
 		// styling breaks if the button is removed without reordering DOM
-		$("#departure-time>span").remove();
 		$("#departure-time>input").attr("type", "datetime-local");
-		$("#departure-time>input").appendTo($("#departure-time").parent());
 	}
-
-
-	//POPUPWINDOW: Autocomplete search filtering conditions set to only establishments within australia
-	options = {
-		types: ['establishment'],
-		componentRestrictions: {country: "aus"}
-	};
-
-
-	//POPUPWINDOW: Textfield input
-	input = document.getElementById('attraction-location');
-	
-					
-	// Initialising the autocomplete objects, restricting the search
-	// to geographical location types.
-	startLocationAutocomplete = new google.maps.places.Autocomplete(input, options);
-		
-	// When the user selects an address from the dropdown,
-	// populate the address fields in the form.
-	//start location autocomplete event
-	google.maps.event.addListener(startLocationAutocomplete, 'place_changed', function () {
-		currentLocationName = document.getElementById('attraction-location').value;
-		geocodeAddress(document.getElementById('attraction-location').value, 3);
-		
-		
-		
-		$("#add-attraction").removeAttr("disabled");
-	});
 	
 	transitLayer = new google.maps.TransitLayer();
 	trafficLayer = new google.maps.TrafficLayer();
@@ -238,12 +124,35 @@ function initialize() {
 	destinationMarker = new google.maps.Marker({
 		animation: google.maps.Animation.DROP
 	});
-	
-	$('[data-toggle="tooltip"]').tooltip();
+}
+
+function initAttractions() {
+	// Function scope variables
+	var attractionAutocomplete;
+					
+	// Initialising the autocomplete objects, restricting the search
+	// to geographical location types.
+	attractionAutocomplete = new google.maps.places.Autocomplete(document.getElementById('attraction-location'), {
+		types: ['establishment'],
+		componentRestrictions: {country: "aus"}
+	});
+		
+	// When the user selects an address from the dropdown,
+	// populate the address fields in the form.
+	//start location autocomplete event
+	google.maps.event.addListener(attractionAutocomplete, 'place_changed', function () {
+		currentLocationName = document.getElementById('attraction-location').value;
+		geocodeAddress(document.getElementById('attraction-location').value, 3);
+		
+		$("#add-attraction").removeAttr("disabled");
+	});
 	
 	$("#attraction-table-container").hide();
-	
-	window.scrollTo(0,1);
+}
+
+function initHotels() {
+	console.log("test");
+	$("#cost-range").slider({});
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
@@ -303,6 +212,17 @@ function addAttraction() {
 	calculateRoute();
 }
 
+function addHotel() {
+	var location = {name: currentLocationName, location: currentLocation};
+	addedHotelsArray.push(location);
+	
+	document.getElementById("hotel-location").value = '';
+	$("#add-attraction").attr("disabled", true);
+
+	generateTable();
+	setHotelMarkers();
+	calculateRoute();
+}
 
 function generateTable() {
     var table,
@@ -349,10 +269,6 @@ function deleteAttraction(button) {
 	calculateRoute();
 }
 
-function placeAttractions() {
-	
-}
-
 function shareRoute() {
 	
 }
@@ -396,6 +312,10 @@ function setAttractionMarkers() {
 	}
 }
 
+function setHotelMarkers() {
+	
+}
+
 function setTravelType(originElement, newTravelType) {
 	travelType = newTravelType;
 	$("#travel-mode>.btn-group").each(function () {
@@ -418,6 +338,14 @@ function setTravelType(originElement, newTravelType) {
         trafficLayer.setMap(map);
         break;
 	}
+}
+
+function setRating(originElement, newRating) {
+	minimumRating = newRating;
+	$("#hotel-rating>.btn-group").each(function () {
+		$(this).children().first().attr("class", "btn btn-default");
+	});
+	$(originElement).attr("class", "btn btn-success");
 }
 
 function setRoundTrip(button) {

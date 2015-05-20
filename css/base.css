@@ -11,7 +11,7 @@ body {
     position: relative;
     width: 100%;
     height: 95%;
-	margin-bottom: 20px;
+	margin-bottom: 8px;
 }
 .map-container .map-canvas {
     position: absolute;
@@ -110,6 +110,21 @@ button:hover > .button-poptext {
 .panel-title .close {
 	font-size: 24px;
 	margin-top: -3px;
+}
+
+.well-light {
+	background-color: #fff;
+}
+
+#hotel-rating button {
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+
+#hotel-rating span {
+	letter-spacing: -5px;
+	font-size: 11px;
 }
 
 #footer-tabs {
