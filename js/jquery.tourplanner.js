@@ -242,6 +242,8 @@ function initialize() {
 	$('[data-toggle="tooltip"]').tooltip();
 	
 	$("#attraction-table-container").hide();
+	
+	window.scrollTo(0,1);
 }
 
 //Takes the entered address and set the start and end location latitude and longitude
